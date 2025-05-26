@@ -24,6 +24,10 @@ const OrderListComponent = () => {
   const { onLogout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const cancelOrder = async (id) => {
+    const res = await axiosInstance.patch(`${API_BASE_URL}${ORDER}/${id}`);
+  };
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -62,7 +66,8 @@ const OrderListComponent = () => {
                 </TableCell>
                 <TableCell>
                   {order.orderStatus === 'ORDERED' && (
-                    <Button color='secondary' size='small'>
+                    <Button color='secondary' size='small'
+                      onClick={cancelOrder}>
                       CANCEL
                     </Button>
                   )}
