@@ -13,8 +13,6 @@ import { replace, useNavigate } from 'react-router-dom';
 import { API_BASE_URL, USER } from '../configs/host-config';
 import AuthContext from '../context/UserContext';
 import axios from 'axios';
-import { setISODay } from 'date-fns';
-import { Login } from '@mui/icons-material';
 
 const MemberCreate = () => {
   const [name, setName] = useState('');
@@ -49,33 +47,33 @@ const MemberCreate = () => {
       return;
     }
     const regEmail =
-      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
-
-    // 정규 표현식 작성 후 변수에 대입해 주면, 정규표현식을 담은 객체로 저장이 된다.
+    // 정규표현식 작성 후 변수에 대입해 주면, 정규표현식을 담은 객체로 저장이 됩니다.
     // 해당 정규표현식 객체는 test 메서드를 통해, 전달된 값이 정규표현식에 일치하는 값인지를 검증하는 로직을 제공.
     if (!regEmail.test(email)) {
       alert('올바른 이메일 형식이 아닙니다.');
       return;
     }
 
+    setEmailSendLoading(true); // 이메일 전송 직전에 로딩 상태 true
     try {
-      const res = await axios.post(`${API_BASE_URL}${USER}/email-vaild`, {
+      const res = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
         email,
       });
       console.log('응답된 결과: ', res.data);
 
       setIsEmailSent(true); // 인증 코드를 입력할 수 있는 필드를 드러내자.
-      alert('인증 코드가 이메일로 발송되었습니다.')
+      alert('인증 코드가 이메일로 발송되었습니다.');
     } catch (error) {
       console.error('이메일 발송 오류: ', error);
-      if (error.response.data.statusMessage === 'still Blocking') {
-        alert('인증 차단된 이메일 입니다. 잠시 후 다시 시도해 주세요');
+      if (error.response.data.statusMessage === 'Blocking') {
+        alert('인증 차된된 이메일 입니다. 잠시 후 다시 시도해 주세요!');
       } else {
         alert('인증 이메일 발송 중 오류 발생!');
       }
     } finally {
-      setEmailSendLoading(false); // 전송되든 에러가 나든 로딩이 끝났음을 알려주기기
+      setEmailSendLoading(false); // 전송되든 에러가 나든 로딩이 끝났음을 알려주기.
     }
   };
 
@@ -88,7 +86,8 @@ const MemberCreate = () => {
     setVerifyLoading(true);
     try {
       const res = await axios.post(`${API_BASE_URL}${USER}/verify`, {
-        email, code: verificationCode,
+        email,
+        code: verificationCode,
       });
 
       console.log('응답된 데이터: ', res.data);
@@ -99,10 +98,12 @@ const MemberCreate = () => {
       const msg = error.response.data.statusMessage;
       if (msg === 'authCode expired!') {
         alert('인증 시간이 만료되었습니다. 인증 코드부터 다시 발급해 주세요!');
-      } else if (msg.indexOf('wrong!') !== -1) {
-        alert(`인증 코드가 올바르지 않습니다!, 남은 횟수: ${msg.split(', ')[1]}`,);
-      } else if (msg === 'still Blocking') {
-        alert('임시차단된 이메일입니다!');
+      } else if (msg.indexOf('wrong') !== -1) {
+        alert(
+          `인증 코드가 올바르지 않습니다!, 남은 횟수: ${msg.split(', ')[1]}`,
+        );
+      } else if (msg === 'Blocking') {
+        alert('임시 차단된 이메일입니다. 잠시 후 다시 시도해 주세요!');
       } else {
         alert('기타 오류 발생!');
       }
@@ -181,6 +182,7 @@ const MemberCreate = () => {
                 margin='normal'
                 required
               />
+
               {/* 이메일 필드와 인증 버튼 */}
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                 <TextField
@@ -198,11 +200,11 @@ const MemberCreate = () => {
                   fullWidth
                   margin='normal'
                   required
-                // sx={{
-                //   '& .MuiInputBase-root': {
-                //     backgroundColor: isEmailVerified ? '#f5f5f5' : 'inherit',
-                //   },
-                // }}
+                  // sx={{
+                  //   '& .MuiInputBase-root': {
+                  //     backgroundColor: isEmailVerified ? '#f5f5f5' : 'inherit',
+                  //   },
+                  // }}
                 />
                 <Button
                   variant='outlined'
