@@ -57,24 +57,24 @@ const MemberCreate = () => {
     }
 
     setEmailSendLoading(true); // 이메일 전송 직전에 로딩 상태 true
-    try {
-      const res = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
-        email,
-      });
-      console.log('응답된 결과: ', res.data);
+    // try {
+    const res = await axios.post(`${API_BASE_URL}${USER}/email-valid`, {
+      email,
+    });
+    console.log('응답된 결과: ', res.data);
 
-      setIsEmailSent(true); // 인증 코드를 입력할 수 있는 필드를 드러내자.
-      alert('인증 코드가 이메일로 발송되었습니다.');
-    } catch (error) {
-      console.error('이메일 발송 오류: ', error);
-      if (error.response.data.statusMessage === 'Blocking') {
-        alert('인증 차된된 이메일 입니다. 잠시 후 다시 시도해 주세요!');
-      } else {
-        alert('인증 이메일 발송 중 오류 발생!');
-      }
-    } finally {
-      setEmailSendLoading(false); // 전송되든 에러가 나든 로딩이 끝났음을 알려주기.
-    }
+    setIsEmailSent(true); // 인증 코드를 입력할 수 있는 필드를 드러내자.
+    alert('인증 코드가 이메일로 발송되었습니다.');
+    // } catch (error) {
+    //   console.error('이메일 발송 오류: ', error);
+    //   if (error.response.data.statusMessage === 'Blocking') {
+    //     alert('인증 차된된 이메일 입니다. 잠시 후 다시 시도해 주세요!');
+    //   } else {
+    //     alert('인증 이메일 발송 중 오류 발생!');
+    //   }
+    // } finally {
+    //   setEmailSendLoading(false); // 전송되든 에러가 나든 로딩이 끝났음을 알려주기.
+    // }
   };
 
   const verifyEmailCode = async () => {
@@ -200,11 +200,11 @@ const MemberCreate = () => {
                   fullWidth
                   margin='normal'
                   required
-                  // sx={{
-                  //   '& .MuiInputBase-root': {
-                  //     backgroundColor: isEmailVerified ? '#f5f5f5' : 'inherit',
-                  //   },
-                  // }}
+                // sx={{
+                //   '& .MuiInputBase-root': {
+                //     backgroundColor: isEmailVerified ? '#f5f5f5' : 'inherit',
+                //   },
+                // }}
                 />
                 <Button
                   variant='outlined'

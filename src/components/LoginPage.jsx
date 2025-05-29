@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/UserContext';
 import { jwtDecode } from 'jwt-decode';
@@ -25,8 +25,31 @@ const LoginPage = () => {
   const { onLogin } = useContext(AuthContext);
 
   // 환경변수에서 가져오기
-  const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+  const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;  // REST API 키
   const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
+  // useEffect(콜백함수, 의존성배열)
+  useEffect(() => {
+    const handleMessage = (e) => {
+      // origin (브라우저 호스트 주소)을 비교하여 이벤트 발생 상황 외에는 동작하지 않게.
+      if (
+        e.origin !== 'http://localhost:8000' &&
+        e.origin !== window.location.origin
+      )
+        return;
+
+      if (e.data.type === 'OAUTH_SUCCESS') {
+        alert('카카오 로그인 성공!');
+        onLogin(e.data);
+        navigate('/');
+      }
+    };
+
+    // 브라우저에 이벤트 바인딩 -> 백엔드에서 postMessage를 통해 부모 창으로 데이터를 전송합니다.
+    // 부모창에 message를 수신하는 이벤트를 지정해서 해당 데이터를 읽어오겠다.
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [onLogin, navigate]); // onLogin, navigate 가 호출 될때마다 useEffect 실행하겠다
 
   // 구글 로그인 처리
   const handleGoogleLogin = () => {
@@ -36,9 +59,9 @@ const LoginPage = () => {
   // 카카오 로그인 처리
   const handleKakaoLogin = () => {
     console.log('카카오 로그인 버튼 클릭!');
-    // 로그인 팝업창 열기
+    // 로그인 팝업창 열기 open(url, 팝업창 이름, 팝업창 설정) 
     const popup = window.open(
-      `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
+      `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&prompt=login`,
       'kakao-login',
       'width=500,height=600,scrollbars=yes,resizable=yes',
     );
