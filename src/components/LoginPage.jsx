@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/UserContext';
 import { jwtDecode } from 'jwt-decode';
@@ -28,7 +29,6 @@ const LoginPage = () => {
   const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;  // REST API 키
   const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
-  // useEffect(콜백함수, 의존성배열)
   useEffect(() => {
     const handleMessage = (e) => {
       // origin (브라우저 호스트 주소)을 비교하여 이벤트 발생 상황 외에는 동작하지 않게.
@@ -49,7 +49,7 @@ const LoginPage = () => {
     // 부모창에 message를 수신하는 이벤트를 지정해서 해당 데이터를 읽어오겠다.
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [onLogin, navigate]); // onLogin, navigate 가 호출 될때마다 useEffect 실행하겠다
+  }, [onLogin, navigate]);
 
   // 구글 로그인 처리
   const handleGoogleLogin = () => {
