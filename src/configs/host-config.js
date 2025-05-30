@@ -14,10 +14,7 @@ let backendHostName;
 if (clientHostName === 'localhost') {
   // 개발 중
   backendHostName = 'http://localhost:8000';
-} else if (
-  clientHostName ===
-  'playdata-orderservice8917.s3-website.ap-northeast-2.amazonaws.com'
-) {
+} else if (clientHostName === 'https://playdatashop8758.store') {
   // 배포해서 현재 서비스 중
   backendHostName = 'http://43.202.111.197:8000';
 }
