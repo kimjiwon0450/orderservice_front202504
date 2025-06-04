@@ -14,9 +14,9 @@ let backendHostName;
 if (clientHostName === 'localhost') {
   // 개발 중
   backendHostName = 'http://localhost:8000';
-} else if (clientHostName === 'https://playdatashop8758.store') {
+} else if (clientHostName === 'playdatashop8758.store') {
   // 배포해서 현재 서비스 중
-  backendHostName = 'http://43.202.111.197:8000';
+  backendHostName = 'https://api.playdatashop8758.store'; // ec2-docker-pratice의 host 번호
 }
 
 export const API_BASE_URL = backendHostName;
